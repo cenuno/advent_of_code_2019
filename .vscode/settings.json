@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "/Users/cristiannuno/ENTER/envs/ac2019-env/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true,
+    "editor.rulers": [80],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#ff4081"
+    },
+}
