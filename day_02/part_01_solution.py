@@ -2,7 +2,6 @@
 Restore the gravity assist program (your puzzle input) to the
 "1202 program alarm" state it had just before the last computer caught fire.
 """
-import csv
 from typing import List
 
 # store a new data type
