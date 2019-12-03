@@ -4,10 +4,10 @@ calculate the sum of the fuel requirement for all modules
 """
 
 
-def calculate_fuel(x: int) -> int:
+def calculate_fuel(mass: int) -> int:
     """Given the mass of a module, calculate the fuel requirement
     Args:
-        - x (int): the mass of the module
+        - mass (int): the mass of the module
 
     Returns:
         int: the fuel requirement for the module
@@ -18,21 +18,22 @@ def calculate_fuel(x: int) -> int:
     For a mass of 1969, the fuel required is 654.
     For a mass of 100756, the fuel required is 33583.
     """
-    return (x // 3) - 2
+    return (mass // 3) - 2
 
 
-# quick gut check that the function is correct
-assert calculate_fuel(x=12) == 2
-assert calculate_fuel(x=14) == 2
-assert calculate_fuel(x=1969) == 654
-assert calculate_fuel(x=100756) == 33583
+# check that the function is correct
+assert calculate_fuel(mass=12) == 2
+assert calculate_fuel(mass=14) == 2
+assert calculate_fuel(mass=1969) == 654
+assert calculate_fuel(mass=100756) == 33583
 
 # load data
+# note: convert string into list of integers
 with open("data/day_01_input.txt", "r") as f:
-    module_masses = f.read().split("\n")
+    module_masses = [int(item) for item in f.read().split("\n")]
 
 # find the fuel requirement for each module
-fuel_requirement = [calculate_fuel(x=int(mass))
+fuel_requirement = [calculate_fuel(mass)
                     for mass in module_masses]
 
 # print the sum of the fuel requirement for all the modules

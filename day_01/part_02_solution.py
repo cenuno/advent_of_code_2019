@@ -4,24 +4,24 @@ on your spacecraft when also taking into account the mass of the added fuel
 """
 
 
-def _general_fuel_checker(x: int) -> int:
+def _general_fuel_checker(mass: int) -> int:
     """Given the mass of a module, calculate the fuel requirement
     Args:
-        - x (int): the mass of the module
+        - mass (int): the mass of the module
 
     Returns:
         int: the fuel requirement
     """
-    return (x // 3) - 2
+    return (mass // 3) - 2
 
 
-def calculate_fuel(x: int) -> int:
+def calculate_fuel(mass: int) -> int:
     """Given the mass of a module, calculate the total fuel requirement
     This calculation takes the initial fuel requirement as the input mass and
     repeat the process, continuing until a fuel requirement is zero or negative
 
     Args:
-        - x (int): the mass of the module
+        - mass (int): the mass of the module
 
     Returns:
         int: the total fuel requirement for the module
@@ -44,10 +44,10 @@ def calculate_fuel(x: int) -> int:
     33583 + 11192 + 3728 + 1240 + 411 + 135 + 43 + 12 + 2 = 50346.
     """
     # calculate initial fuel requirement
-    initial_fuel_req = _general_fuel_checker(x=x)
+    initial_fuel_req = _general_fuel_checker(mass)
 
     # inspect if the result of accounting for the next fuel requirement is <= 0
-    if _general_fuel_checker(x=initial_fuel_req) <= 0:
+    if _general_fuel_checker(initial_fuel_req) <= 0:
         # no need to inspect further, return the results as is
         return initial_fuel_req
     else:
@@ -62,24 +62,24 @@ def calculate_fuel(x: int) -> int:
         # 2. calculating the next fuel requirement
         #    from the latest fuel requirement
         #    results in a value larger than zero
-        while (output[-1] > 0) and (_general_fuel_checker(x=output[-1]) > 0):
+        while (output[-1] > 0) and (_general_fuel_checker(output[-1]) > 0):
             # if it passes, add the results to the output object
-            output.append(_general_fuel_checker(x=output[-1]))
+            output.append(_general_fuel_checker(output[-1]))
         # once the conditions are no longer met, return the sum of the results
         return sum(output)
 
 
 # quick gut check that the function is correct
-assert calculate_fuel(x=14) == 2
-assert calculate_fuel(x=1969) == 966
-assert calculate_fuel(x=100756) == 50346
+assert calculate_fuel(mass=14) == 2
+assert calculate_fuel(mass=1969) == 966
+assert calculate_fuel(mass=100756) == 50346
 
 # load data
 with open("data/day_01_input.txt", "r") as f:
-    module_masses = f.read().split("\n")
+    module_masses = [int(item) for item in f.read().split("\n")]
 
 # find the fuel requirement for each module
-fuel_requirement = [calculate_fuel(x=int(mass))
+fuel_requirement = [calculate_fuel(mass)
                     for mass in module_masses]
 
 # print the sum of the fuel requirement for all the modules
