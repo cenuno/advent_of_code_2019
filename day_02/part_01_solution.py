@@ -21,8 +21,9 @@ def calculate_intcode_program(data: Vector) -> Vector:
     # store steps to move
     steps = 4
     # store how many sequences to run
-    # note: sequences need to be whole numbers so we're rounding up
-    sequences = range(0, round(len(data) / 4))
+    # note: this is done by identifying how many sequences data contains
+    #       using the step size defined in steps
+    sequences = range(0, len(data), steps)
     # store a copy of the data
     ints = data.copy()
 
@@ -30,13 +31,13 @@ def calculate_intcode_program(data: Vector) -> Vector:
         if ints[counter] == 1:
             # if the optcode int is 1
             # sum the values of the two positions next to ints[counter]
-            # and place its value in the position 3 steps ahead of ints[counter]
+            # & place its value in the position 3 steps ahead of ints[counter]
             sum_of_next_two = ints[ints[counter + 1]] + ints[ints[counter + 2]]
             ints[ints[counter + 3]] = sum_of_next_two
         elif ints[counter] == 2:
             # if the optcode int is 2
             # multiple the values of the two positions next to ints[counter]
-            # and place its value in the position 3 steps ahead of ints[counter]
+            # & place its value in the position 3 steps ahead of ints[counter]
             prod_of_next_two = ints[ints[counter + 1]] * ints[ints[counter + 2]]
             ints[ints[counter + 3]] = prod_of_next_two
         elif ints[counter] == 99:
