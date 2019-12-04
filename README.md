@@ -25,3 +25,13 @@ conda env create -f environment.yml
 # activate the ac2019-env conda environment
 conda activate ac2019-env
 ```
+
+## Run Code
+
+To run the Python code, please type the following into the Terminal/Command Line:
+
+```bash
+# note: call the python program followed by the relative path to 
+#       the particular python file
+python day_02/part_02_solution.py
+```
