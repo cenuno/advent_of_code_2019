@@ -16,31 +16,31 @@ def calculate_intcode_program(data: Vector) -> Vector:
     Returns:
         Vector: the results of the Intcode program following the opcode logic
     """
-    # store the counter
-    counter = 0
     # store steps to move
     steps = 4
+
     # store how many sequences to run
     # note: this is done by identifying how many sequences data contains
     #       using the step size defined in steps
     sequences = range(0, len(data), steps)
+
     # store a copy of the data
     ints = data.copy()
 
     for seq in sequences:
-        if ints[counter] == 1:
+        if ints[seq] == 1:
             # if the optcode int is 1
-            # sum the values of the two positions next to ints[counter]
-            # & place its value in the position 3 steps ahead of ints[counter]
-            sum_of_next_two = ints[ints[counter + 1]] + ints[ints[counter + 2]]
-            ints[ints[counter + 3]] = sum_of_next_two
-        elif ints[counter] == 2:
+            # sum the values of the two positions next to ints[seq]
+            # & place its value in the position 3 steps ahead of ints[seq]
+            sum_of_next_two = ints[ints[seq + 1]] + ints[ints[seq + 2]]
+            ints[ints[seq + 3]] = sum_of_next_two
+        elif ints[seq] == 2:
             # if the optcode int is 2
-            # multiple the values of the two positions next to ints[counter]
-            # & place its value in the position 3 steps ahead of ints[counter]
-            prod_of_next_two = ints[ints[counter + 1]] * ints[ints[counter + 2]]
-            ints[ints[counter + 3]] = prod_of_next_two
-        elif ints[counter] == 99:
+            # multiple the values of the two positions next to ints[seq]
+            # & place its value in the position 3 steps ahead of ints[seq]
+            prod_of_next_two = ints[ints[seq + 1]] * ints[ints[seq + 2]]
+            ints[ints[seq + 3]] = prod_of_next_two
+        elif ints[seq] == 99:
             # if the optcode is 99
             # halt the program entirely
             break
@@ -48,12 +48,9 @@ def calculate_intcode_program(data: Vector) -> Vector:
             # if the optcode is anything other than 1, 2, or 99
             # halt the program with an error message
             print(f"""
-            A non-optcode integer was found at index {counter}: {ints[counter]}
+            A non-optcode integer was found at index {seq}: {ints[seq]}
             """)
             break
-
-        # move the counter forward
-        counter += steps
 
     return ints
 
