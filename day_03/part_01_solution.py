@@ -14,8 +14,12 @@ with open("data/day_03_input.txt", "r") as f:
 CENTRAL_PORT_POS = (0, 0)
 
 
-def calculate_sign(direction: List[str]) -> List[Tuple[int, int]]:
-    """Determines the sign for each step recorded along the wire's direction
+def calculate_relative_coords(direction: List[str]) -> List[Tuple[int, int]]:
+    """Determines the relative coordinate pair for each step along a wire
+    Note:
+        - The key term here is 'relative'. Each coordinate pair is a step in
+          both the x and y direction relative to the previous step. The pairs
+          are meaningless by themselves.
     Args:
         - direction (List[str]): the direction recorded at a particular point
                                  along a wire
@@ -55,4 +59,4 @@ def calculate_sign(direction: List[str]) -> List[Tuple[int, int]]:
     return coords
 
 
-assert calculate_sign(["R1004", "U518", "R309", "D991"]) == [(1004, 518), (309, -991)]
+assert calculate_relative_coords(["R1004", "U518", "R309", "D991"]) == [(1004, 518), (309, -991)]
