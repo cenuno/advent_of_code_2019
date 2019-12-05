@@ -94,3 +94,18 @@ def calculate_position(relative_coords: CoordPair) -> CoordPair:
 # check work
 assert calculate_position([(1004, 518), (309, -991)]) == [(1004, 518), (1313, -473)]
 assert calculate_position([(-998, 952), (204, 266)]) == [(-998, 952), (-794, 1218)]
+
+# calculate the position of each wire
+wire_a = calculate_position(calculate_relative_coords(wires[0]))
+wire_b = calculate_position(calculate_relative_coords(wires[1]))
+
+# check work
+print(wire_a)
+print(wire_b)
+
+# identify the positions that are similar
+crossed_paths = list(set(wire_a).intersection(wire_b))
+print(crossed_paths)
+
+# TODO:
+# - figure out why crossed_paths is returning an empty list
