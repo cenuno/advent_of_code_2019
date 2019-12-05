@@ -8,36 +8,39 @@ from typing import List
 Vector = List[int]
 
 
-def calculate_intcode_program(x: Vector) -> Vector:
-    """Performs the Intcode program
+def calculate_intcode_program(data: Vector) -> Vector:
+    """Conducts optcode logic on the Intcode program
     Args:
-        - x (Vector): an Intcode program
+        - data (Vector): an Intcode program
 
     Returns:
         Vector: the results of the Intcode program following the opcode logic
     """
-    # store the counter
-    counter = 0
     # store steps to move
     steps = 4
+
     # store how many sequences to run
-    # note: sequences need to be whole numbers so we're rounding up
-    sequences = range(0, round(len(x) / 4))
+    # note: this is done by identifying how many sequences data contains
+    #       using the step size defined in steps
+    sequences = range(0, len(data), steps)
+
+    # store a copy of the data
+    ints = data.copy()
 
     for seq in sequences:
-        if x[counter] == 1:
+        if ints[seq] == 1:
             # if the optcode int is 1
-            # sum the values of the two positions next to x[counter]
-            # and place its value in the position 3 steps ahead of x[counter]
-            sum_of_next_two = x[x[counter + 1]] + x[x[counter + 2]]
-            x[x[counter + 3]] = sum_of_next_two
-        elif x[counter] == 2:
+            # sum the values of the two positions next to ints[seq]
+            # & place its value in the position 3 steps ahead of ints[seq]
+            sum_of_next_two = ints[ints[seq + 1]] + ints[ints[seq + 2]]
+            ints[ints[seq + 3]] = sum_of_next_two
+        elif ints[seq] == 2:
             # if the optcode int is 2
-            # multiple the values of the two positions next to x[counter]
-            # and place its value in the position 3 steps ahead of x[counter]
-            prod_of_next_two = x[x[counter + 1]] * x[x[counter + 2]]
-            x[x[counter + 3]] = prod_of_next_two
-        elif x[counter] == 99:
+            # multiple the values of the two positions next to ints[seq]
+            # & place its value in the position 3 steps ahead of ints[seq]
+            prod_of_next_two = ints[ints[seq + 1]] * ints[ints[seq + 2]]
+            ints[ints[seq + 3]] = prod_of_next_two
+        elif ints[seq] == 99:
             # if the optcode is 99
             # halt the program entirely
             break
@@ -45,14 +48,11 @@ def calculate_intcode_program(x: Vector) -> Vector:
             # if the optcode is anything other than 1, 2, or 99
             # halt the program with an error message
             print(f"""
-            A non-optcode integer was found at index {counter}: {x[counter]}
+            A non-optcode integer was found at index {seq}: {ints[seq]}
             """)
             break
 
-        # move the counter forward
-        counter += steps
-
-    return x
+    return ints
 
 
 # load necessary data
