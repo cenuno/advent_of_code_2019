@@ -59,4 +59,6 @@ def calculate_relative_coords(direction: List[str]) -> List[Tuple[int, int]]:
     return coords
 
 
+# check work
 assert calculate_relative_coords(["R1004", "U518", "R309", "D991"]) == [(1004, 518), (309, -991)]
+assert calculate_relative_coords(["L998", "U952", "R204", "U266"]) == [(-998, 952), (204, 266)]
