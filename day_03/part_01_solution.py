@@ -75,33 +75,30 @@ def calculate_position(relative_coords: CoordPair) -> CoordPair:
     Returns:
         CoordPair: the position of each coordinate pair from the central port
     """
-    output = []
-    for index, coord in enumerate(relative_coords):
-        if index == 0:
-            # since we're assuming the origin of the central port is (0,0)
-            # we can make the first position that same as the first coordinate
-            output.append(coord)
-        else:
-            # otherwise, add the x-coord from the last coordinate
-            # with the x-coord of the current coordinate;
-            # the same is done for the y-coord
-            position = (output[-1][0] + coord[0], output[-1][1] + coord[1])
-            output.append(position)
+    output = [ORIGIN]
+    for coord in relative_coords:
+        # otherwise, add the x-coord from the last coordinate
+        # with the x-coord of the current coordinate;
+        # the same is done for the y-coord
+        first_position = (output[-1][0] + coord[0], output[-1][1])
+        second_position = (first_position[0], output[-1][1] + coord[1])
+        output.append(first_position)
+        output.append(second_position)
 
     return output
 
 
 # check work
-assert calculate_position([(1004, 518), (309, -991)]) == [(1004, 518), (1313, -473)]
-assert calculate_position([(-998, 952), (204, 266)]) == [(-998, 952), (-794, 1218)]
+assert calculate_position([(1004, 518), (309, -991)]) == [(0, 0), (1004, 0), (1004, 518), (1313, 518), (1313, -473)]
+assert calculate_position([(-998, 952), (204, 266)]) == [(0, 0), (-998, 0), (-998, 952), (-794, 952), (-794, 1218)]
 
 # calculate the position of each wire
 wire_a = calculate_position(calculate_relative_coords(wires[0]))
 wire_b = calculate_position(calculate_relative_coords(wires[1]))
 
 # check work
-print(wire_a)
-print(wire_b)
+print(len(wire_a))
+print(len(wire_b))
 
 # identify the positions that are similar
 crossed_paths = list(set(wire_a).intersection(wire_b))
