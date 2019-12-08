@@ -101,3 +101,15 @@ def calculate_positions(relative_coords: CoordPair) -> CoordPair:
 # check work
 assert calculate_positions([(1, -2)]) == [(0, 0), (1, 0), (1, -1), (1, -2)]
 assert calculate_positions([(2, 3), (-1, -2)]) == [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (1, 3), (1, 2), (1, 1)]
+
+# calculate the relative position of each wire
+relative_positions = {"wire_a": calculate_relative_coords(wires[0]),
+                      "wire_b": calculate_relative_coords(wires[1])}
+
+# calculate the position of each wire
+positions = {"wire_a": calculate_positions(relative_positions["wire_a"]),
+             "wire_b": calculate_positions(relative_positions["wire_b"])}
+
+# identify the positions that are similar
+crossed_paths = list(set(positions["wire_a"]).intersection(positions["wire_b"]))
+print(f"There are {len(crossed_paths)} times the wires cross paths")
