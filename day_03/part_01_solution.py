@@ -67,42 +67,90 @@ assert calculate_relative_coords(["R1004", "U518", "R309", "D991"]) == [(1004, 5
 assert calculate_relative_coords(["L998", "U952", "R204", "U266"]) == [(-998, 952), (204, 266)]
 
 
-def calculate_position(relative_coords: CoordPair) -> CoordPair:
-    """Calculate the position of each coordinate pair from the central port
+def calculate_positions(relative_coords: CoordPair) -> CoordPair:
+    """Calculate the positions for each coordinate pair from the central port
     Args:
-        - relative_coords (CoordPair): the relative coordinate pair at a 
+        - relative_coords (CoordPair): the relative coordinate pair at a
                                        particular point along a wire
     Returns:
-        CoordPair: the position of each coordinate pair from the central port
+        CoordPair: the positions from each coordinate pair from the central port
     """
     output = [ORIGIN]
     for coord in relative_coords:
-        # otherwise, add the x-coord from the last coordinate
-        # with the x-coord of the current coordinate;
-        # the same is done for the y-coord
-        first_position = (output[-1][0] + coord[0], output[-1][1])
-        second_position = (first_position[0], output[-1][1] + coord[1])
-        output.append(first_position)
-        output.append(second_position)
-
+        # for each coordinate pair, find its intermediate positions
+        for idx, val in enumerate(coord):
+            # if val is a pos, take a step in the pos direction
+            if val >= 0:
+                step = 1
+            else:
+                # otherwise take a step in the neg direction
+                step = -1
+            for _ in range(abs(val)):
+                # for each integer between 0 and the value,
+                # calculate the intermediate steps between the last position
+                # and the next by moving one step in the appropriate direction
+                if idx == 0:
+                    x_pos = (output[-1][0] + step, output[-1][1])
+                    output.append(x_pos)
+                else:
+                    y_pos = (output[-1][0], output[-1][1] + step)
+                    output.append(y_pos)
     return output
 
 
 # check work
-assert calculate_position([(1004, 518), (309, -991)]) == [(0, 0), (1004, 0), (1004, 518), (1313, 518), (1313, -473)]
-assert calculate_position([(-998, 952), (204, 266)]) == [(0, 0), (-998, 0), (-998, 952), (-794, 952), (-794, 1218)]
+assert calculate_positions([(1, -2)]) == [(0, 0), (1, 0), (1, -1), (1, -2)]
+assert calculate_positions([(2, 3), (-1, -2)]) == [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (1, 3), (1, 2), (1, 1)]
 
-# calculate the position of each wire
-wire_a = calculate_position(calculate_relative_coords(wires[0]))
-wire_b = calculate_position(calculate_relative_coords(wires[1]))
+
+def distance(point_a: Tuple[int, int],
+             point_b: Tuple[int, int],
+             m: int) -> float:
+    """Generalized distance between two points
+    Note:
+        See more info here: https://xlinux.nist.gov/dads/HTML/lmdistance.html
+    Args:
+        - point_a (Tuple[int, int]): a coordinate pair
+        - point_b (Tuple[int, int]): a coordinate pair
+        - m (int): the type of distance to calculate between the points
+                        Can only take three values:
+                        1 -> manhattan
+                        2 -> euclidean
+                        More than 2 -> minkowski
+    Result:
+        float: the distance between the two points
+    """
+    abs_dif_x_exp_m = abs(point_a[0] - point_b[0]) ** m
+    abs_dif_y_exp_m = abs(point_a[1] - point_b[1]) ** m
+    sum_dif = abs_dif_x_exp_m + abs_dif_y_exp_m
+    distance = sum_dif ** (1 / m)
+    return distance
+
 
 # check work
-print(len(wire_a))
-print(len(wire_b))
+assert distance((2, 7), (14, -6), m=1) == 25.0
+assert distance((2, 7), (14, -6), m=2) == 17.69180601295413
+assert distance((2, 7), (14, -6), m=3) == 15.77417133438064
 
-# identify the positions that are similar
-crossed_paths = list(set(wire_a).intersection(wire_b))
-print(crossed_paths)
+# calculate the relative position of each wire
+relative_positions = {"wire_a": calculate_relative_coords(wires[0]),
+                      "wire_b": calculate_relative_coords(wires[1])}
 
-# TODO:
-# - figure out why crossed_paths is returning an empty list
+# calculate the position of each wire
+positions = {"wire_a": calculate_positions(relative_positions["wire_a"]),
+             "wire_b": calculate_positions(relative_positions["wire_b"])}
+
+# identify the positions that are intersect
+crossed_paths = list(set(positions["wire_a"]).intersection(positions["wire_b"]))
+# remove the origin
+crossed_paths.remove(ORIGIN)
+
+# identify distance from each point of intersection to the central port
+distances = []
+for path in crossed_paths:
+    distances.append(distance(ORIGIN, path, m=1))
+
+print(f"""
+There were {len(crossed_paths)} times the paths of the wires crossed.
+The min. distance from one and the point of origin was {round(min(distances))}.
+""")
