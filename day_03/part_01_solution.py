@@ -140,6 +140,17 @@ relative_positions = {"wire_a": calculate_relative_coords(wires[0]),
 positions = {"wire_a": calculate_positions(relative_positions["wire_a"]),
              "wire_b": calculate_positions(relative_positions["wire_b"])}
 
-# identify the positions that are similar
+# identify the positions that are intersect
 crossed_paths = list(set(positions["wire_a"]).intersection(positions["wire_b"]))
-print(f"There are {len(crossed_paths)} times the wires cross paths")
+# remove the origin
+crossed_paths.remove(ORIGIN)
+
+# identify distance from each point of intersection to the central port
+distances = []
+for path in crossed_paths:
+    distances.append(distance(ORIGIN, path, m=1))
+
+print(f"""
+There were {len(crossed_paths)} times the paths of the wires crossed.
+The min. distance from one and the point of origin was {round(min(distances))}.
+""")
