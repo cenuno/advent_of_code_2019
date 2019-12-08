@@ -102,6 +102,36 @@ def calculate_positions(relative_coords: CoordPair) -> CoordPair:
 assert calculate_positions([(1, -2)]) == [(0, 0), (1, 0), (1, -1), (1, -2)]
 assert calculate_positions([(2, 3), (-1, -2)]) == [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (1, 3), (1, 2), (1, 1)]
 
+
+def distance(point_a: Tuple[int, int],
+             point_b: Tuple[int, int],
+             m: int) -> float:
+    """Generalized distance between two points
+    Note:
+        See more info here: https://xlinux.nist.gov/dads/HTML/lmdistance.html
+    Args:
+        - point_a (Tuple[int, int]): a coordinate pair
+        - point_b (Tuple[int, int]): a coordinate pair
+        - m (int): the type of distance to calculate between the points
+                        Can only take three values:
+                        1 -> manhattan
+                        2 -> euclidean
+                        More than 2 -> minkowski
+    Result:
+        float: the distance between the two points
+    """
+    abs_dif_x_exp_m = abs(point_a[0] - point_b[0]) ** m
+    abs_dif_y_exp_m = abs(point_a[1] - point_b[1]) ** m
+    sum_dif = abs_dif_x_exp_m + abs_dif_y_exp_m
+    distance = sum_dif ** (1 / m)
+    return distance
+
+
+# check work
+assert distance((2, 7), (14, -6), m=1) == 25.0
+assert distance((2, 7), (14, -6), m=2) == 17.69180601295413
+assert distance((2, 7), (14, -6), m=3) == 15.77417133438064
+
 # calculate the relative position of each wire
 relative_positions = {"wire_a": calculate_relative_coords(wires[0]),
                       "wire_b": calculate_relative_coords(wires[1])}
