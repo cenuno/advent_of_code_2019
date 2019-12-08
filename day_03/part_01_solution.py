@@ -120,9 +120,9 @@ def distance(point_a: Tuple[int, int],
     Result:
         float: the distance between the two points
     """
-    abs_dif_x_exp_m = abs(point_a[0] - point_b[0]) ** m
-    abs_dif_y_exp_m = abs(point_a[1] - point_b[1]) ** m
-    sum_dif = abs_dif_x_exp_m + abs_dif_y_exp_m
+    abs_diff_x_exp_m = abs(point_a[0] - point_b[0]) ** m
+    abs_diff_y_exp_m = abs(point_a[1] - point_b[1]) ** m
+    sum_dif = abs_diff_x_exp_m + abs_diff_y_exp_m
     distance = sum_dif ** (1 / m)
     return distance
 
