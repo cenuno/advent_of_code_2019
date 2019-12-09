@@ -4,9 +4,22 @@ must take to reach an intersection
 """
 from part_01_solution import (
     positions,
-    crossed_paths
+    crossed_paths,
+    ORIGIN
 )
 
-print(positions["wire_a"][0:10])
-print(crossed_paths[0:10])
-print(positions["wire_a"].index(crossed_paths[0]))
+# remove the origin from both wires
+for wire in positions:
+    positions[wire].remove(ORIGIN)
+
+# for each crossed path, sum the steps it took both wires to arrive there
+steps = {"path": [], "steps": []}
+for path in crossed_paths:
+    steps["path"].append(path)
+    steps["steps"].append(positions["wire_a"].index(path)
+                          + positions["wire_b"].index(path))
+
+# find the minimum number of steps it took to reach one intersection
+print(f"""
+The min. number of steps to reach an intersection is {min(steps["steps"])}.
+""")
