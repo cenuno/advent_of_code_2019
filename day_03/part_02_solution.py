@@ -16,8 +16,8 @@ for wire in positions:
 steps = {"path": [], "steps": []}
 for path in crossed_paths:
     steps["path"].append(path)
-    steps["steps"].append(positions["wire_a"].index(path)
-                          + positions["wire_b"].index(path))
+    steps["steps"].append(positions["wire_a"].index(path) + 1
+                          + positions["wire_b"].index(path) + 1)
 
 # find the minimum number of steps it took to reach one intersection
 print(f"""
