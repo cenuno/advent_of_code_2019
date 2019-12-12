@@ -9,7 +9,7 @@ from typing import List, Tuple
 CoordPair = List[Tuple[int, int]]
 
 # load necessary data
-with open("data/day_03_input.txt", "r") as f:
+with open("../data/day_03_input.txt", "r") as f:
     # in a list, store each wire's directional path as a list of strings
     wires = [wire.split(",") for wire in f.read().split("\n")]
 
@@ -17,7 +17,7 @@ with open("data/day_03_input.txt", "r") as f:
 ORIGIN = (0, 0)
 
 
-def calculate_relative_coords(direction: List[str]) -> CoordPair:
+def calculate_relative_coords(directions: List[str]) -> CoordPair:
     """Determines the relative coordinate pair for each step along a wire
     Note:
         - The key term here is 'relative'. Each coordinate pair is a step in
@@ -29,42 +29,29 @@ def calculate_relative_coords(direction: List[str]) -> CoordPair:
     Results:
         List[Tuple[int, int]]: List of each coordinate pair, stored as a tuple
     """
-    # if 'R' or 'U' appears in the direction, ensure it is a pos int;
-    # otherwise make it negative
-    steps = [int(dir[1:])
-             if dir.find("R") == 0 or dir.find("U") == 0
-             else -int(dir[1:])
-             for dir in direction]
-
-    # store each odd numbered element as the x-coordinate
-    x_coords = steps[0::2]
-    # store each even numbered element as the y-coordinate
-    y_coords = steps[1::2]
-
-    if len(y_coords) == len(x_coords):
-        pass
-    elif len(y_coords) > len(x_coords):
-        # if there are more y-coords than x-coords
-        # pad the difference in x_coords with zeros
-        diff = len(y_coords) - len(x_coords)
-        x_coords.extend([0] * diff)
-    else:
-        # if there are more x-coords than y-coords
-        # pad the difference in y_coords with zeros
-        diff = len(x_coords) - len(y_coords)
-        y_coords.extend([0] * diff)
-
-    # create the coordinate pairs
     coords = []
-    for x_coord, y_coord in zip(x_coords, y_coords):
-        coords.append((x_coord, y_coord))
-
+    
+    for instruction in directions:
+        direction = instruction[0]
+        magnitude = int(instruction[1:])
+        
+        if direction == "R":
+            coords.append((magnitude, 0))
+        elif direction == "L":
+            coords.append((-magnitude, 0))
+        elif direction == "U":
+            coords.append((0, magnitude))
+        elif direction == "D":
+            coords.append((0, -magnitude))
+        else:
+            print("Error, encountered direction", direction)
+            
     return coords
 
 
 # check work
-assert calculate_relative_coords(["R1004", "U518", "R309", "D991"]) == [(1004, 518), (309, -991)]
-assert calculate_relative_coords(["L998", "U952", "R204", "U266"]) == [(-998, 952), (204, 266)]
+assert calculate_relative_coords(["R1004", "U518", "R309", "D991"]) == [(1004, 0), (0, 518), (309, 0), (0, -991)]
+assert calculate_relative_coords(["L998", "U952", "R204", "U266"]) == [(-998, 0), (0, 952), (204, 0), (0, 266)]
 
 
 def calculate_positions(relative_coords: CoordPair) -> CoordPair:
